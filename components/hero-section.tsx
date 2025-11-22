@@ -53,7 +53,8 @@ useEffect(() => {
 
   return (
     <>
-      <section className="bg-background pt-16 sm:pt-24 lg:pt-32 pb-20 sm:pb-32 px-4 sm:px-6 lg:px-8">
+      <section className="bg-background pt-16 sm:pt-24 lg:pt-32 pb-20 sm:pb-32 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+
         <div className="max-w-7xl mx-auto">
 
           {/* Top Text */}
@@ -61,7 +62,7 @@ useEffect(() => {
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
               Premium Jerseys
             </p>
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-light tracking-tight mb-6">
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-light tracking-tight mb-6">
               RedCardRetail
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto font-light">
