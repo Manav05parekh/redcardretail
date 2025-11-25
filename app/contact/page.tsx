@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { Mail, Phone, MapPin } from "lucide-react"
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { Mail, MapPin } from "lucide-react";
 
 export default function ContactPage() {
   return (
@@ -16,38 +15,35 @@ export default function ContactPage() {
           We'd love to hear from you. Reach out with any questions or feedback.
         </p>
 
-        <div className="space-y-10">
-          {/* Email */}
-          <div className="flex items-center justify-center gap-4">
-            <Mail className="text-muted-foreground" size={22} />
-            <div className="text-left">
-              <p className="font-semibold text-sm mb-1">Email</p>
-              <a
-                href="mailto:hello@miniml.com"
-                className="text-muted-foreground hover:text-foreground text-sm transition"
-              >
-                redcardretailjerseys@gmail.com
-              </a>
-            </div>
+        {/* CENTERED CONTAINER */}
+        <div className="flex flex-col items-center gap-12">
+
+          {/* EMAIL SECTION */}
+          <div className="flex flex-col items-center">
+            <Mail className="text-muted-foreground mb-3" size={26} />
+            <p className="font-semibold text-sm mb-1">Email</p>
+            <a
+              href="mailto:redcardretailjerseys@gmail.com"
+              className="text-muted-foreground hover:text-foreground text-sm transition"
+            >
+              redcardretailjerseys@gmail.com
+            </a>
           </div>
 
-          {/* Phone */}
-          
-          {/* Address */}
-          <div className="flex items-center justify-center gap-4">
-            <MapPin className="text-muted-foreground" size={22} />
-            <div className="text-left">
-              <p className="font-semibold text-sm mb-1">Address</p>
-              <p className="text-muted-foreground text-sm leading-5">
-                RedCardRetail <br />
-                Mumbai, India
-              </p>
-            </div>
+          {/* ADDRESS SECTION */}
+          <div className="flex flex-col items-center">
+            <MapPin className="text-muted-foreground mb-3" size={26} />
+            <p className="font-semibold text-sm mb-1">Address</p>
+            <p className="text-muted-foreground text-sm leading-5 text-center">
+              RedCardRetail <br />
+              Mumbai, India
+            </p>
           </div>
+
         </div>
       </div>
 
       <Footer />
     </main>
-  )
+  );
 }

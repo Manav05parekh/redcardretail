@@ -4,28 +4,36 @@ import { Footer } from "@/components/footer"
 export default function FAQPage() {
   const faqs = [
     {
-      q: "What is the material composition?",
-      a: "Our t-shirts are made from 100% premium cotton blend at 240 GSM weight. This ensures durability, comfort, and longevity.",
+      q: "What products does RedCardRetail sell?",
+      a: "We specialize in premium football jerseys, combos, and athletic wear designed for comfort, durability, and performance.",
+    },
+    {
+      q: "What is the material of the jerseys?",
+      a: "Our jerseys are made using high-quality breathable polyester sports fabric designed to keep you cool and comfortable during play.",
     },
     {
       q: "Do you offer free shipping?",
-      a: "Yes! Free shipping is available on all orders above ₹499. Orders below that amount incur a ₹99 shipping charge.",
+      a: "Yes! Free shipping is available on all orders above ₹499. Orders below that amount have a flat ₹99 delivery charge.",
     },
     {
-      q: "What is your return policy?",
-      a: "We offer a 30-day return policy on all items. If you're not satisfied, simply initiate a return within 30 days of purchase.",
-    },
-    {
-      q: "How should I care for my MINIML tee?",
-      a: "Machine wash in cold water, do not bleach, and line dry for best results. This will keep your tee vibrant and durable for years.",
+      q: "What is your return or exchange policy?",
+      a: "We currently have a **No Return / No Exchange Policy** for all orders due to sizing hygiene and limited-stock inventory. Please check the size guide carefully before purchasing.",
     },
     {
       q: "When will I receive my order?",
-      a: "Delivery typically takes 3-7 business days depending on your location. You can check delivery estimates during checkout.",
+      a: "Orders are typically delivered within **3–5 business days** depending on your location. Remote areas may take slightly longer.",
+    },
+    {
+      q: "Can I cancel my order?",
+      a: "Orders can be cancelled only **before they are processed or shipped**. Once dispatched, cancellation is not possible.",
     },
     {
       q: "Do you ship internationally?",
-      a: "Currently, we ship only within India. We're exploring international shipping options and will announce them soon.",
+      a: "Currently, we ship only within India. International shipping will be introduced soon.",
+    },
+    {
+      q: "How can I contact support?",
+      a: "You can reach us anytime at our official WhatsApp support number shown during checkout. We're happy to help!",
     },
   ]
 
@@ -35,7 +43,7 @@ export default function FAQPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-4xl font-light tracking-tight mb-2">Frequently Asked Questions</h1>
         <p className="text-muted-foreground mb-12">
-          Find answers to common questions about MINIML products and services.
+          Find quick answers about RedCardRetail’s products, shipping, and order policies.
         </p>
 
         <div className="space-y-6">

@@ -66,7 +66,7 @@ useEffect(() => {
               RedCardRetail
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto font-light">
-              Timeless minimalism. Pure quality. Perfect fabric. 
+              Made for Play. Built to Last. 
             </p>
           </div>
 
@@ -87,7 +87,7 @@ useEffect(() => {
         priority
       />
       <div className="absolute top-6 right-6 bg-primary text-primary-foreground px-4 py-2 text-xs uppercase font-bold tracking-wider">
-        Black Friday 40% Off
+        Black Friday 25% Off
       </div>
     </div>
   </Link>
@@ -124,7 +124,7 @@ useEffect(() => {
         priority
       />
       <div className="absolute top-6 right-6 bg-primary text-primary-foreground px-4 py-2 text-xs uppercase font-bold tracking-wider">
-        Black Friday 30% Off
+        Black Friday 32% Off
       </div>
     </div>
   </Link>
@@ -152,48 +152,62 @@ useEffect(() => {
 
           {/* Black Friday Timer */}
           <div className="border-y border-border py-8 sm:py-12 mb-16 sm:mb-24">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-8">
-              <div>
-                <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
-                  Black Friday Sale Ends In
-                </p>
+  <div className="flex flex-col sm:flex-row items-center justify-between gap-8">
+    <div>
+      <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
+        Black Friday Sale Ends In
+      </p>
 
-                <div className="flex gap-4 sm:gap-6">
-                  {/* Days */}
-                  <div className="text-center">
-                    <p className="text-3xl sm:text-4xl font-light">
-                      {String(timeLeft.days).padStart(2, "0")}
-                    </p>
-                    <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
-                      Days
-                    </p>
-                  </div>
+      <div className="flex gap-4 sm:gap-6">
+        
+        {/* Days */}
+        <div className="text-center">
+          <p className="text-3xl sm:text-4xl font-light">
+            {String(timeLeft.days).padStart(2, "0")}
+          </p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
+            Days
+          </p>
+        </div>
 
-                  <div className="text-3xl sm:text-4xl font-light text-muted-foreground">:</div>
+        <div className="text-3xl sm:text-4xl font-light text-muted-foreground">:</div>
 
-                  {/* Hours */}
-                  <div className="text-center">
-                    <p className="text-3xl sm:text-4xl font-light">
-                      {String(timeLeft.hours).padStart(2, "0")}
-                    </p>
-                    <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
-                      Hours
-                    </p>
-                  </div>
+        {/* Hours */}
+        <div className="text-center">
+          <p className="text-3xl sm:text-4xl font-light">
+            {String(timeLeft.hours).padStart(2, "0")}
+          </p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
+            Hours
+          </p>
+        </div>
 
-                  <div className="text-3xl sm:text-4xl font-light text-muted-foreground">:</div>
+        <div className="text-3xl sm:text-4xl font-light text-muted-foreground">:</div>
 
-                  {/* Minutes */}
-                  <div className="text-center">
-                    <p className="text-3xl sm:text-4xl font-light">
-                      {String(timeLeft.minutes).padStart(2, "0")}
-                    </p>
-                    <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
-                      Mins
-                    </p>
-                  </div>
-                </div>
-              </div>
+        {/* Minutes */}
+        <div className="text-center">
+          <p className="text-3xl sm:text-4xl font-light">
+            {String(timeLeft.minutes).padStart(2, "0")}
+          </p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
+            Mins
+          </p>
+        </div>
+
+        <div className="text-3xl sm:text-4xl font-light text-muted-foreground">:</div>
+
+        {/* Seconds */}
+        <div className="text-center">
+          <p className="text-3xl sm:text-4xl font-light">
+            {String(timeLeft.seconds).padStart(2, "0")}
+          </p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mt-1">
+            Secs
+          </p>
+        </div>
+
+      </div>
+    </div>
 
               <Link
                 href="/shop"

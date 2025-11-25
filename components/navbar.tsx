@@ -45,7 +45,7 @@ export function Navbar() {
             {/* Desktop Icons */}
             <div className="hidden md:flex items-center gap-4">
               <Link href="/checkout" className="p-2 hover:opacity-60 transition-opacity relative">
-                <ShoppingBag size={20} />
+                <ShoppingBag size={20}  />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
                     {cartCount}

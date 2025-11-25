@@ -13,11 +13,7 @@ export function Footer() {
                   All Products
                 </Link>
               </li>
-              <li>
-                <Link href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  By Color
-                </Link>
-              </li>
+             
             </ul>
           </div>
           <div>
@@ -70,7 +66,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; 2025 MINIML. All rights reserved.</p>
+          <p>&copy; 2025 RedCardRetail. All rights reserved.</p>
         </div>
       </div>
     </footer>

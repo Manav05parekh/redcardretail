@@ -4,43 +4,24 @@ import { useState } from "react";
 
 export function OrderTracker() {
   const [orderId, setOrderId] = useState("");
-  const [order, setOrder] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
     setLoading(true);
-    setError(null);
-    setOrder(null);
 
-    try {
-      const res = await fetch("/api/get-order", {
-        method: "POST",
-        body: JSON.stringify({ orderId }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const data = await res.json();
-
-      if (!data.success) {
-        setError("No order found. Check your Order ID.");
-      } else {
-        setOrder(data);
-      }
-    } catch (err) {
-      setError("Something went wrong.");
-    } finally {
+    // Simulate checking...
+    setTimeout(() => {
+      setShowResult(true);
       setLoading(false);
-    }
+    }, 800);
   };
-
-  const deliveryDate = "26–29 November";
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-light mb-2">Track Your Order</h1>
       <p className="text-muted-foreground mb-8">
-        Enter your Order ID to check order details.
+        Enter your Order ID to check your delivery timeline.
       </p>
 
       {/* Search Box */}
@@ -64,28 +45,28 @@ export function OrderTracker() {
       </div>
 
       {/* Result */}
-      {error && (
-        <div className="bg-red-50 border border-red-300 text-red-600 p-4 rounded">
-          {error}
-        </div>
-      )}
-
-      {order && (
+      {showResult && (
         <div className="bg-card border border-border rounded p-6">
           <h2 className="text-lg font-semibold mb-4">Order Details</h2>
 
           <p className="text-sm mb-2">
-            <span className="font-semibold">Order ID:</span> {order.orderId}
+            <span className="font-semibold">Order ID:</span> {orderId}
           </p>
+
           <p className="text-sm mb-2">
-            <span className="font-semibold">Items:</span> {order.items}
+            <span className="font-semibold">Status:</span>{" "}
+            Order Confirmed ✔
           </p>
-          <p className="text-sm mb-2">
-            <span className="font-semibold">Amount:</span> ₹{order.total}
-          </p>
+
           <p className="text-sm mb-2">
             <span className="font-semibold">Delivery Estimate:</span>{" "}
-            {deliveryDate}
+            <span className="text-green-700 font-semibold">
+              Your order will arrive in 3–5 business days.
+            </span>
+          </p>
+
+          <p className="text-sm text-muted-foreground mt-4">
+            If you need help, contact us on WhatsApp or email.
           </p>
         </div>
       )}

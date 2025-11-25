@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Lock, CheckCircle2 } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 
-type CheckoutStep = "cart" | "shipping" | "payment" | "confirmation";
+type CheckoutStep = "cart" | "shipping" | "confirmation";
 
 interface ShippingInfo {
   firstName: string;
@@ -32,18 +32,14 @@ export function CheckoutFlow() {
     pincode: "",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("upi");
-  const [orderID, setOrderID] = useState("");
   const [errors, setErrors] = useState<any>({});
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-  const [syncError, setSyncError] = useState<string | null>(null);
 
   // PRICE (NO TAX)
   const subtotal = getCartTotal();
   const shipping = subtotal > 499 ? 0 : 99;
   const total = subtotal + shipping;
 
-  // SHIPPING VALIDATION
+  // 🌟 WhatsApp ORDER FLOW
   const handleShippingSubmit = () => {
     let newErrors: any = {};
 
@@ -65,94 +61,81 @@ export function CheckoutFlow() {
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) setStep("payment");
-  };
+    if (Object.keys(newErrors).length !== 0) return;
 
-  // PAYMENT + API
-  const handlePaymentSubmit = async () => {
-    if (!paymentMethod) {
-      setErrors({ payment: "Please select a payment method" });
-      return;
-    }
-
-    setIsPlacingOrder(true);
-    setSyncError(null);
-
-    const id = `ORD-${new Date().getFullYear()}-${String(
+    // Generate Order ID
+    const orderId = `ORD-${new Date().getFullYear()}-${String(
       Math.floor(Math.random() * 10000)
     ).padStart(5, "0")}`;
 
-    setOrderID(id);
+    // Build WhatsApp message
+    const message = `
+🛍️ *New Order Request from RedCardRetail*
 
-    // Array sent to backend
-    const payload = {
-      orderId: id,
-      shippingInfo,
-      paymentMethod,
-      subtotal,
-      shipping,
-      total,
-      items: cartItems.map((item) => ({
-        name: item.name,
-        size: item.size,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-    };
+*Order ID:* ${orderId}
 
-    try {
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+--------------------------
+📦 *Items Ordered*
+${cartItems
+  .map(
+    (item) =>
+      `• ${item.name} (Size: ${item.size}) × ${item.quantity} = ₹${item.price * item.quantity}`
+  )
+  .join("\n")}
 
-      const data = await res.json();
+--------------------------
+💰 *Total Amount:* ₹${total}
+(Shipping: ${shipping === 0 ? "FREE" : "₹" + shipping})
 
-      if (!res.ok || !data.success) {
-        console.error("Order sync failed:", data);
-        setSyncError("Order saved locally, but failed to sync to Sheets.");
-      }
-    } catch (error) {
-      console.error("Order sync error:", error);
-      setSyncError("Order saved locally, but failed to sync to Sheets.");
-    } finally {
-      setIsPlacingOrder(false);
-      setStep("confirmation");
-    }
+--------------------------
+🏡 *Shipping Address*
+${shippingInfo.firstName} ${shippingInfo.lastName}
+${shippingInfo.address}
+${shippingInfo.city}, ${shippingInfo.state} - ${shippingInfo.pincode}
+
+📞 ${shippingInfo.phone}
+📧 ${shippingInfo.email}
+
+--------------------------
+Please confirm the order and send payment instructions.
+    `;
+
+    const whatsappNumber = "918169413019"; // ← REPLACE WITH YOUR WHATSAPP NUMBER
+
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+
+    window.location.href = url; // Redirect to WhatsApp
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* STEP INDICATOR */}
+      {/* 🔢 STEP INDICATOR */}
       <div className="flex items-center justify-between mb-12">
-        {(["cart", "shipping", "payment", "confirmation"] as CheckoutStep[]).map(
-          (s, i) => (
-            <div key={s} className="flex items-center flex-1">
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${
-                  step === s ||
-                  (["payment", "confirmation"].includes(step) &&
-                    ["cart", "shipping"].includes(s))
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-border text-muted-foreground"
-                }`}
-              >
-                {i + 1}
-              </div>
-              {i < 3 && (
-                <div
-                  className={`flex-1 h-0.5 mx-2 transition-all ${
-                    step > s ? "bg-primary" : "bg-border"
-                  }`}
-                />
-              )}
+        {(["cart", "shipping", "confirmation"] as CheckoutStep[]).map((s, i) => (
+          <div key={s} className="flex items-center flex-1">
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${
+                step === s || (step === "confirmation" && s !== "confirmation")
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-border text-muted-foreground"
+              }`}
+            >
+              {i + 1}
             </div>
-          )
-        )}
+            {i < 2 && (
+              <div
+                className={`flex-1 h-0.5 mx-2 transition-all ${
+                  step === "confirmation" ? "bg-primary" : "bg-border"
+                }`}
+              />
+            )}
+          </div>
+        ))}
       </div>
 
-      {/* CART STEP */}
+      {/* 🛒 CART STEP */}
       {step === "cart" && (
         <div>
           <h1 className="text-3xl font-light tracking-tight mb-8">Order Review</h1>
@@ -166,10 +149,12 @@ export function CheckoutFlow() {
             </div>
           ) : (
             <>
+              {/* CART ITEMS */}
               <div className="bg-card border border-border rounded-lg p-8 mb-8">
                 <h2 className="font-semibold text-sm uppercase tracking-wide mb-6">
                   Items in Cart
                 </h2>
+
                 <div className="space-y-4">
                   {cartItems.map((item) => (
                     <div
@@ -231,12 +216,14 @@ export function CheckoutFlow() {
                     <span>Subtotal</span>
                     <span>₹{subtotal}</span>
                   </div>
+
                   <div className="flex justify-between">
                     <span>Shipping</span>
                     <span className={shipping === 0 ? "text-green-600 font-medium" : ""}>
                       {shipping === 0 ? "FREE" : `₹${shipping}`}
                     </span>
                   </div>
+
                   <div className="border-t border-border pt-3 flex justify-between font-semibold">
                     <span>Total</span>
                     <span>₹{total}</span>
@@ -252,13 +239,21 @@ export function CheckoutFlow() {
         </div>
       )}
 
-      {/* SHIPPING STEP */}
+      {/* 🚚 SHIPPING STEP (WITH TRUST TEXT) */}
       {step === "shipping" && (
         <div>
-          <h1 className="text-3xl font-light tracking-tight mb-8">Shipping Address</h1>
+          <h1 className="text-3xl font-light tracking-tight mb-3">Shipping Address</h1>
+
+          <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+            👉 <strong>Your order will be confirmed on WhatsApp.</strong>  
+            After submitting your address, you will be redirected to our verified WhatsApp Business chat with your full order details.  
+            You can review everything, ask questions, and complete payment securely via UPI / QR code.  
+            We do this to ensure <strong>safe, verified & trusted order handling for every customer.</strong>
+          </p>
 
           <div className="bg-card border border-border rounded-lg p-8">
             <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* First Name */}
               <div className="col-span-1">
                 <input
                   type="text"
@@ -276,6 +271,7 @@ export function CheckoutFlow() {
                 )}
               </div>
 
+              {/* Last Name */}
               <input
                 type="text"
                 placeholder="Last Name"
@@ -286,6 +282,7 @@ export function CheckoutFlow() {
                 className="col-span-1 border border-border rounded px-4 py-3 text-sm"
               />
 
+              {/* Email */}
               <div className="col-span-2">
                 <input
                   type="email"
@@ -303,6 +300,7 @@ export function CheckoutFlow() {
                 )}
               </div>
 
+              {/* Phone */}
               <div className="col-span-2">
                 <input
                   type="tel"
@@ -320,6 +318,7 @@ export function CheckoutFlow() {
                 )}
               </div>
 
+              {/* Address */}
               <div className="col-span-2">
                 <input
                   type="text"
@@ -337,6 +336,7 @@ export function CheckoutFlow() {
                 )}
               </div>
 
+              {/* City */}
               <input
                 type="text"
                 placeholder="City"
@@ -347,6 +347,7 @@ export function CheckoutFlow() {
                 className="col-span-1 border border-border rounded px-4 py-3 text-sm"
               />
 
+              {/* State */}
               <input
                 type="text"
                 placeholder="State"
@@ -357,6 +358,7 @@ export function CheckoutFlow() {
                 className="col-span-1 border border-border rounded px-4 py-3 text-sm"
               />
 
+              {/* Pincode */}
               <div className="col-span-1">
                 <input
                   type="text"
@@ -382,95 +384,19 @@ export function CheckoutFlow() {
               >
                 Back
               </button>
-              <button onClick={handleShippingSubmit} className="flex-1 btn-primary">
-                Continue to Payment
+
+              <button
+                onClick={handleShippingSubmit}
+                className="flex-1 btn-primary"
+              >
+                Continue on WhatsApp
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* PAYMENT STEP */}
-      {step === "payment" && (
-        <div>
-          <h1 className="text-3xl font-light tracking-tight mb-8">Payment Method</h1>
-
-          <div className="bg-card border border-border rounded-lg p-8 mb-8">
-            <h2 className="font-semibold text-sm uppercase tracking-wide mb-6">
-              Select Payment Method
-            </h2>
-
-            <div className="space-y-3 mb-8">
-              {[
-
-                { id: "upi", label: "UPI", description: "Google Pay, PhonePe, Paytm" },
-                { id: "card", label: "Credit/Debit Card", description: "All major cards" },
-                { id: "netbanking", label: "Net Banking", description: "All major banks" },
-
-              ].map((method) => (
-                <label
-                  key={method.id}
-                  className="flex items-start gap-3 p-4 border border-border rounded cursor-pointer hover:bg-secondary transition-colors"
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    value={method.id}
-                    checked={paymentMethod === method.id}
-                    onChange={(e) => {
-                      setPaymentMethod(e.target.value);
-                      setErrors({});
-                    }}
-                    className="mt-1 cursor-pointer"
-                  />
-                  <div className="flex-1">
-                    <p className="font-semibold text-sm">{method.label}</p>
-                    <p className="text-xs text-muted-foreground">{method.description}</p>
-                  </div>
-                </label>
-              ))}
-            </div>
-
-            {errors.payment && (
-              <p className="text-red-500 text-xs mb-4">{errors.payment}</p>
-            )}
-
-            {syncError && (
-              <p className="text-red-500 text-xs mb-4">{syncError}</p>
-            )}
-
-            <div className="bg-secondary/50 rounded-lg p-4 mb-8">
-              <div className="flex justify-between text-sm font-semibold">
-                <span>Total Amount</span>
-                <span>₹{total}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-6">
-              <Lock size={14} />
-              <span>Your payment information is secure and encrypted</span>
-            </div>
-
-            <div className="flex gap-4">
-              <button
-                onClick={() => setStep("shipping")}
-                className="flex-1 border-2 border-primary text-primary py-3 px-4 font-medium hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                Back
-              </button>
-              <button
-                onClick={handlePaymentSubmit}
-                className="flex-1 btn-primary disabled:opacity-70"
-                disabled={isPlacingOrder}
-              >
-                {isPlacingOrder ? "Placing Order..." : "Place Order"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* CONFIRMATION STEP */}
+      {/* 🎉 CONFIRMATION (After WhatsApp redirect) */}
       {step === "confirmation" && (
         <div className="text-center">
           <div className="mb-6 flex justify-center">
@@ -480,51 +406,8 @@ export function CheckoutFlow() {
           </div>
 
           <h1 className="text-3xl font-light tracking-tight mb-2">
-            Order Confirmed!
+            Redirecting to WhatsApp…
           </h1>
-          <p className="text-muted-foreground mb-8">
-            Thank you for your purchase
-          </p>
-
-          <div className="bg-card border border-border rounded-lg p-8 mb-8 text-left">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">
-              Order ID
-            </p>
-            <p className="font-semibold text-lg mb-6">{orderID}</p>
-
-            <div className="border-t border-border pt-6">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-4">
-                Order Summary
-              </p>
-              <div className="space-y-2 text-sm mb-4">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>₹{subtotal}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>{shipping === 0 ? "FREE" : `₹${shipping}`}</span>
-                </div>
-              </div>
-
-              <div className="border-t border-border pt-2 flex justify-between font-semibold">
-                <span>Total</span>
-                <span>₹{total}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <a href="/order-status" className="flex-1 btn-primary text-center py-3">
-              Track Order
-            </a>
-            <a
-              href="/shop"
-              className="flex-1 border-2 border-primary text-primary py-3 px-4 font-medium hover:bg-primary hover:text-primary-foreground text-center transition-colors"
-            >
-              Continue Shopping
-            </a>
-          </div>
         </div>
       )}
     </div>
