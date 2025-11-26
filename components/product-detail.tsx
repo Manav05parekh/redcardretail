@@ -153,7 +153,7 @@ export default function ProductDetail({ productId }: { productId: string }) {
               Quantity
             </label>
 
-            <div className="flex items-center border w-fit rounded">
+              <div className="flex items-center border w-fit rounded">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="px-4 py-2"

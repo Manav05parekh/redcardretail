@@ -4,6 +4,24 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { CartProvider } from "@/context/cart-context";
 import "./globals.css";
+import Script from "next/script";
+
+<head>
+  <Script
+    strategy="afterInteractive"
+    src={`https://www.googletagmanager.com/gtag/js?id=G-RDRGXF9W0Z`}
+  />
+
+  <Script id="google-analytics" strategy="afterInteractive">
+    {`
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RDRGXF9W0Z');
+    `}
+  </Script>
+</head>
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,6 +33,9 @@ export const metadata: Metadata = {
   description:
     "Ultra-minimal, premium quality solid-color jerseys. Clean design, perfect fit.",
   generator: "v0.app",
+   icons: {
+    icon: "/logo.png", // ⭐ Add this line
+  },
 };
 
 // ----------------------------

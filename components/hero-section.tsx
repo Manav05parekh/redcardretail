@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 
 export function HeroSection() {
-  const targetDate = new Date("2025-11-28T23:59:59"); // 🟢 Set SALE END DATE here
+  const targetDate = new Date("2025-11-30T23:59:59"); // 🟢 Set SALE END DATE here
 
 const [timeLeft, setTimeLeft] = useState({
   days: 0,

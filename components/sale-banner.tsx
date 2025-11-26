@@ -14,7 +14,7 @@ export function SaleBanner() {
 
   useEffect(() => {
     // Black Friday sale ends: Nov 29, 2025 at 11:59 PM
-    const saleEndDate = new Date("2025-11-29T23:59:59").getTime()
+    const saleEndDate = new Date("2025-11-30T23:59:59").getTime()
 
     const timer = setInterval(() => {
       const now = new Date().getTime()
